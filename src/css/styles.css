@@ -1,0 +1,110 @@
+/* styles.css */
+
+/* Estilos para o tabuleiro de jogo */
+.game-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    background-color: #f0f0f0; 
+    padding: 20px; 
+    border-radius: 5px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 30px; 
+    height: 30px; 
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 1px; 
+    transition: background-color 0.3s; 
+    border-radius: 3px; 
+}
+
+.cell.clicked {
+    background-color: #ddd;
+}
+
+.cell.number {
+    color: #007bff;
+}
+
+.cell.mine {
+    color: #ff0000;
+}
+
+.cell.flag {
+    color: #ff9900;
+}
+  
+  /* Estilos para o cabeçalho */
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #fff; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    font-weight: bold; 
+}
+
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.header-dropdown {
+    display: flex;
+    align-items: center;
+}
+
+.header-dropdown label {
+    margin-right: 10px;
+    font-size: 18px;
+    color: #fff; /* Define a cor do texto */
+}
+
+.header-dropdown select {
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.header button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase; /* Transforma o texto em maiúsculas */
+}
+
+.header-score {
+    font-size: 18px;
+    color: #fff; /* Define a cor do texto */
+    margin-top: 10px; /* Adiciona espaçamento superior */
+
+}
