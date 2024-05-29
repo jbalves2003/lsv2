@@ -8,7 +8,7 @@ const Board = () => {
     const [score, setScore] = useState(0);
     const [scoreRanking, setScoreRanking] = useState([]);
     const [playerName, setPlayerName] = useState("");
-
+/*Teste Git*/
     const [gameStarted, setGameStarted] = useState(false);
     const [gamePaused, setGamePaused] = useState(false);
     const [difficulty, setDifficulty] = useState("easy");
