@@ -135,10 +135,10 @@ const Board = () => {
         }
     };
 
-    const addToScoreRanking = (name, time) => {
-        const newScore = { name, time };
+    const addToScoreRanking = (name,score, time) => {
+        const newScore = { name,score, time };
         const updatedRanking = [...scoreRanking, newScore];
-        updatedRanking.sort((a, b) => a.time - b.time);
+        updatedRanking.sort((a, b) => b.score - a.score || a.time - b.time);
         const top10 = updatedRanking.slice(0, 10);
         setScoreRanking(top10);
     };
@@ -162,7 +162,7 @@ const Board = () => {
             setIntervalId(null);
         }
 
-        addToScoreRanking(playerName, time);
+        addToScoreRanking(playerName, score, time);
 
         alert(message);
         resetGameState();
@@ -278,7 +278,7 @@ const Board = () => {
                 <ol>
                     {scoreRanking.map((score, index) => (
                         <li key={index}>
-                            <span>{score.name}</span> - <span>{score.time} segundos</span>
+                            <span>{score.name}</span> - <span>{score.score} pontos</span> - <span>{score.time} segundos</span>
                         </li>
                     ))}
                 </ol>

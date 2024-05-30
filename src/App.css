@@ -22,6 +22,8 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 20px;
+  border-bottom: 2px solid #61dafb;
 }
 
 .App-link {
@@ -35,4 +37,94 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.header {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.header-controls div {
+  margin: 0 10px;
+}
+
+.header-dropdown select {
+  padding: 5px;
+  font-size: 1rem;
+}
+
+.header-score span {
+  margin: 0 10px;
+}
+
+.game-board {
+  display: inline-block;
+  margin: 20px 0;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.cell.clicked {
+  background-color: #ddd;
+}
+
+.cell.flagged {
+  color: red;
+}
+
+.cell.questioned {
+  color: yellow;
+}
+
+.ranking {
+  text-align: center;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  margin: 20px auto;
+  max-width: 80%;
+}
+
+.ranking h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.ranking ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ranking li {
+  margin: 5px 0;
+  font-size: 1.2rem;
 }
