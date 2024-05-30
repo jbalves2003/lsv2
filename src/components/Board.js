@@ -3,17 +3,20 @@ import Header from "./Header";
 import GameBoard from "./GameBoard";
 
 const Board = () => {
+    // Estado do tabuleiro tempo pontuação ranking 
     const [board, setBoard] = useState([]);
     const [time, setTime] = useState(0);
     const [score, setScore] = useState(0);
     const [scoreRanking, setScoreRanking] = useState([]);
     const [playerName, setPlayerName] = useState("");
 
+    // controlo de jogo 
     const [gameStarted, setGameStarted] = useState(false);
     const [gamePaused, setGamePaused] = useState(false);
     const [difficulty, setDifficulty] = useState("easy");
     const [intervalId, setIntervalId] = useState(null);
 
+    // Tabuleiro dependendo da dificuldade 
     const generateBoard = (difficulty) => {
         let rows, cols, mines;
 
@@ -39,6 +42,7 @@ const Board = () => {
                 mines = 10;
         }
 
+        // celulas (padrao)
         const newBoard = Array.from({ length: rows }, () =>
             Array.from({ length: cols }, () => ({
                 value: 0,
@@ -48,6 +52,7 @@ const Board = () => {
             }))
         );
 
+        // minas aleatorias 
         let minesPlaced = 0;
         while (minesPlaced < mines) {
             const randomRow = Math.floor(Math.random() * rows);
@@ -58,6 +63,7 @@ const Board = () => {
             }
         }
 
+        // calculo adjacentes Às minas 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 if (newBoard[i][j].value === "mine") {
@@ -83,19 +89,14 @@ const Board = () => {
         return newBoard;
     };
 
+    // expandir 
     const expandEmptyCells = (row, col, currentBoard) => {
         const rows = currentBoard.length;
         const cols = currentBoard[0].length;
 
         const directions = [
-            [-1, 0],
-            [1, 0],
-            [0, -1],
-            [0, 1],
-            [-1, -1],
-            [-1, 1],
-            [1, -1],
-            [1, 1],
+            [-1, 0], [1, 0], [0, -1], [0, 1],
+            [-1, -1], [-1, 1], [1, -1], [1, 1],
         ];
 
         const queue = [{ row, col }];
@@ -123,6 +124,7 @@ const Board = () => {
         return currentBoard;
     };
 
+    // reset
     const resetGameState = () => {
         setBoard([]);
         setTime(0);
@@ -135,14 +137,16 @@ const Board = () => {
         }
     };
 
-    const addToScoreRanking = (name,score, time) => {
-        const newScore = { name,score, time };
+    // pontuacao ao ranking 
+    const addToScoreRanking = (name, score, time) => {
+        const newScore = { name, score, time };
         const updatedRanking = [...scoreRanking, newScore];
         updatedRanking.sort((a, b) => b.score - a.score || a.time - b.time);
         const top10 = updatedRanking.slice(0, 10);
         setScoreRanking(top10);
     };
 
+    // start
     const handleStartClick = (name) => {
         resetGameState();
         setGameStarted(true);
@@ -154,6 +158,7 @@ const Board = () => {
         setIntervalId(id);
     };
 
+    // end 
     const handleEndClick = (message, isWin = false) => {
         setGameStarted(false);
         setGamePaused(false);
@@ -168,6 +173,7 @@ const Board = () => {
         resetGameState();
     };
 
+    // mudar a dificuldade 
     const handleDifficultyChange = (selectedDifficulty) => {
         setDifficulty(selectedDifficulty);
         if (gameStarted) {
@@ -176,6 +182,7 @@ const Board = () => {
         }
     };
 
+    // funcao click
     const handleCellClick = (row, col) => {
         if (gamePaused || !gameStarted) {
             return;
@@ -238,6 +245,7 @@ const Board = () => {
         }
     };
 
+    // click direito 
     const handleCellContextMenu = (e, row, col) => {
         e.preventDefault();
         if (gamePaused || !gameStarted) {
