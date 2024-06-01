@@ -1,25 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import GameBoard from "./GameBoard";
 
 const Board = () => {
-    // Estado do tabuleiro tempo pontuação ranking 
     const [board, setBoard] = useState([]);
     const [time, setTime] = useState(0);
     const [score, setScore] = useState(0);
     const [scoreRanking, setScoreRanking] = useState([]);
     const [playerName, setPlayerName] = useState("");
 
-    // controlo de jogo 
+    // Controle do jogo
     const [gameStarted, setGameStarted] = useState(false);
     const [gamePaused, setGamePaused] = useState(false);
     const [difficulty, setDifficulty] = useState("easy");
     const [intervalId, setIntervalId] = useState(null);
 
-    // Tabuleiro dependendo da dificuldade 
+    // tempo
+    useEffect(() => {
+        // tempo quando o jogo começa 
+        if (gameStarted && !gamePaused) {
+            const id = setInterval(() => setTime((prevTime) => prevTime + 1), 1000);
+            setIntervalId(id);
+            return () => clearInterval(id);
+        } else if (!gameStarted) {
+            setTime(0);
+        }
+
+        // clean quando o jogo termina 
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+                setIntervalId(null);
+            }
+        };
+    }, [gameStarted, gamePaused]);
+
+    // tabuleiro dificuldade
     const generateBoard = (difficulty) => {
         let rows, cols, mines;
 
+        // board size 
         switch (difficulty) {
             case "easy":
                 rows = 9;
@@ -42,7 +62,7 @@ const Board = () => {
                 mines = 10;
         }
 
-        // celulas (padrao)
+        // tabuleiro com os quadrados (padrao)
         const newBoard = Array.from({ length: rows }, () =>
             Array.from({ length: cols }, () => ({
                 value: 0,
@@ -63,7 +83,7 @@ const Board = () => {
             }
         }
 
-        // calculo adjacentes Às minas 
+        // valores adjacentes 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 if (newBoard[i][j].value === "mine") {
@@ -89,18 +109,25 @@ const Board = () => {
         return newBoard;
     };
 
-    // expandir 
+    // expande os quadrados adjacentes 
     const expandEmptyCells = (row, col, currentBoard) => {
         const rows = currentBoard.length;
         const cols = currentBoard[0].length;
 
         const directions = [
-            [-1, 0], [1, 0], [0, -1], [0, 1],
-            [-1, -1], [-1, 1], [1, -1], [1, 1],
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1],
+            [-1, -1],
+            [-1, 1],
+            [1, -1],
+            [1, 1],
         ];
 
         const queue = [{ row, col }];
 
+        // utiliza uma queue para expandir os quadrados 
         while (queue.length > 0) {
             const { row, col } = queue.shift();
 
@@ -137,7 +164,7 @@ const Board = () => {
         }
     };
 
-    // pontuacao ao ranking 
+    // pontuacao ao rank 
     const addToScoreRanking = (name, score, time) => {
         const newScore = { name, score, time };
         const updatedRanking = [...scoreRanking, newScore];
@@ -146,7 +173,7 @@ const Board = () => {
         setScoreRanking(top10);
     };
 
-    // start
+    // Inicia o jogo
     const handleStartClick = (name) => {
         resetGameState();
         setGameStarted(true);
@@ -154,11 +181,9 @@ const Board = () => {
         setScore(0);
         setPlayerName(name);
         setBoard(generateBoard(difficulty));
-        const id = setInterval(() => setTime((prevTime) => prevTime + 1), 1000);
-        setIntervalId(id);
     };
 
-    // end 
+    // Termina o jogo
     const handleEndClick = (message, isWin = false) => {
         setGameStarted(false);
         setGamePaused(false);
@@ -173,16 +198,16 @@ const Board = () => {
         resetGameState();
     };
 
-    // mudar a dificuldade 
+    // Muda a dificuldade do jogo
     const handleDifficultyChange = (selectedDifficulty) => {
         setDifficulty(selectedDifficulty);
         if (gameStarted) {
             handleEndClick("Terminado.");
-            handleStartClick();
+            handleStartClick(playerName);
         }
     };
 
-    // funcao click
+    // Função de clique em um quadrado 
     const handleCellClick = (row, col) => {
         if (gamePaused || !gameStarted) {
             return;
@@ -286,7 +311,8 @@ const Board = () => {
                 <ol>
                     {scoreRanking.map((score, index) => (
                         <li key={index}>
-                            <span>{score.name}</span> - <span>{score.score} pontos</span> - <span>{score.time} segundos</span>
+                            <span>{score.name}</span> - <span>{score.score} pontos</span> -{" "}
+                            <span>{score.time} segundos</span>
                         </li>
                     ))}
                 </ol>
