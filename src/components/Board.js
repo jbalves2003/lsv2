@@ -110,7 +110,7 @@ const Board = () => {
     };
 
     // expande os quadrados adjacentes 
-    const expandEmptyCells = (row, col, currentBoard) => {
+    const expandCells = (row, col, currentBoard) => {
         const rows = currentBoard.length;
         const cols = currentBoard[0].length;
 
@@ -152,7 +152,7 @@ const Board = () => {
     };
 
     // reset
-    const resetGameState = () => {
+    const resetGame = () => {
         setBoard([]);
         setTime(0);
         setScore(0);
@@ -174,8 +174,8 @@ const Board = () => {
     };
 
     // Inicia o jogo
-    const handleStartClick = (name) => {
-        resetGameState();
+    const handleStartGame = (name) => {
+        resetGame();
         setGameStarted(true);
         setGamePaused(false);
         setScore(0);
@@ -184,7 +184,7 @@ const Board = () => {
     };
 
     // Termina o jogo
-    const handleEndClick = (message, isWin = false) => {
+    const handleEndGame = (message, isWin = false) => {
         setGameStarted(false);
         setGamePaused(false);
         if (intervalId) {
@@ -195,15 +195,15 @@ const Board = () => {
         addToScoreRanking(playerName, score, time);
 
         alert(message);
-        resetGameState();
+        resetGame();
     };
 
     // Muda a dificuldade do jogo
     const handleDifficultyChange = (selectedDifficulty) => {
         setDifficulty(selectedDifficulty);
         if (gameStarted) {
-            handleEndClick("Terminado.");
-            handleStartClick(playerName);
+            handleEndGame("Terminado.");
+            handleStartGame(playerName);
         }
     };
 
@@ -238,14 +238,14 @@ const Board = () => {
                 setIntervalId(null);
             }
 
-            handleEndClick("CABUMM - GameOver!!!");
+            handleEndGame("CABUMM - GameOver!!!");
             setBoard(newBoard);
         } else {
             newBoard[row][col].clicked = true;
             setScore(score + 1);
 
             if (newBoard[row][col].value === 0) {
-                newBoard = expandEmptyCells(row, col, newBoard);
+                newBoard = expandCells(row, col, newBoard);
             }
 
             let allSafeCellsRevealed = true;
@@ -263,7 +263,7 @@ const Board = () => {
 
             if (allSafeCellsRevealed) {
                 console.log("GG EZ - Concluiste o jogo");
-                handleEndClick("GG EZ", true);
+                handleEndGame("GG EZ", true);
             }
 
             setBoard(newBoard);
@@ -271,7 +271,7 @@ const Board = () => {
     };
 
     // click direito 
-    const handleCellContextMenu = (e, row, col) => {
+    const handleCellRightClick = (e, row, col) => {
         e.preventDefault();
         if (gamePaused || !gameStarted) {
             return;
@@ -297,14 +297,14 @@ const Board = () => {
             <Header
                 time={time}
                 score={score}
-                onStartClick={handleStartClick}
-                onEndClick={handleEndClick}
+                onStartClick={handleStartGame}
+                onEndClick={handleEndGame}
                 onDifficultyChange={handleDifficultyChange}
             />
             <GameBoard
                 board={board}
                 handleCellClick={handleCellClick}
-                handleCellContextMenu={handleCellContextMenu}
+                handleCellRightClick={handleCellRightClick}
             />
             <div className="score-ranking">
                 <h2>Ranking de Pontuações</h2>

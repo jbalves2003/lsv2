@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GameBoard = ({ board, handleCellClick, handleCellContextMenu }) => {
+const GameBoard = ({ board, handleCellClick, handleCellRightClick }) => {
     return (
         <div className="game-board">
             {board.map((row, rowIndex) => (
@@ -8,9 +8,9 @@ const GameBoard = ({ board, handleCellClick, handleCellContextMenu }) => {
                     {row.map((cell, colIndex) => (
                         <div
                             key={colIndex}
-                            className={`cell ${cell.clicked ? 'clicked' : ''} ${cell.flagged ? 'flagged' : ''} ${cell.questioned ? 'questioned' : ''}`}
+                              className={`cell ${cell.clicked ? 'clicked' : ''} ${cell.flagged ? 'flagged' : ''} ${cell.questioned ? 'questioned' : ''}`}
                             onClick={() => handleCellClick(rowIndex, colIndex)}
-                            onContextMenu={(e) => handleCellContextMenu(e, rowIndex, colIndex)} >
+                            onContextMenu={(e) => handleCellRightClick(e, rowIndex, colIndex)} >
                             {cell.clicked ? (cell.value === 'mine' ? '💣' : (cell.value > 0 ? cell.value : '')) : (cell.flagged ? '🚩' : (cell.questioned ? '❓' : ''))}
                         </div>
                     ))}
