@@ -38,8 +38,8 @@ const Board = () => {
     // tabuleiro dificuldade
     const generateBoard = (difficulty) => {
         let rows, cols, mines;
-
-        // board size 
+    
+        // dificuldade
         switch (difficulty) {
             case "easy":
                 rows = 9;
@@ -61,8 +61,8 @@ const Board = () => {
                 cols = 9;
                 mines = 10;
         }
-
-        // tabuleiro com os quadrados (padrao)
+    
+        // cria o tabuleiro
         const newBoard = Array.from({ length: rows }, () =>
             Array.from({ length: cols }, () => ({
                 value: 0,
@@ -71,19 +71,19 @@ const Board = () => {
                 questioned: false,
             }))
         );
-
-        // minas aleatorias 
+    
+        // minas aleatoria 
         let minesPlaced = 0;
         while (minesPlaced < mines) {
             const randomRow = Math.floor(Math.random() * rows);
             const randomCol = Math.floor(Math.random() * cols);
-            if (!newBoard[randomRow][randomCol].value) {
+            if (newBoard[randomRow][randomCol].value !== "mine") {
                 newBoard[randomRow][randomCol].value = "mine";
                 minesPlaced++;
             }
         }
-
-        // valores adjacentes 
+    
+        // calcular adjacentes 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 if (newBoard[i][j].value === "mine") {
@@ -105,39 +105,41 @@ const Board = () => {
                 }
             }
         }
-
+    
         return newBoard;
     };
+
 
     // expande os quadrados adjacentes 
     const expandCells = (row, col, currentBoard) => {
         const rows = currentBoard.length;
         const cols = currentBoard[0].length;
-
+    
         const directions = [
-            [-1, 0],
-            [1, 0],
-            [0, -1],
-            [0, 1],
-            [-1, -1],
-            [-1, 1],
-            [1, -1],
-            [1, 1],
+            [-1, 0], [1, 0], [0, -1], [0, 1],
+            [-1, -1], [-1, 1], [1, -1], [1, 1]
         ];
-
+    
         const queue = [{ row, col }];
-
-        // utiliza uma queue para expandir os quadrados 
+        const visited = new Set([`${row},${col}`]);
+    
         while (queue.length > 0) {
             const { row, col } = queue.shift();
-
+    
             for (const [dx, dy] of directions) {
                 const newRow = row + dx;
                 const newCol = col + dy;
-
-                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+    
+                if (
+                    newRow >= 0 &&
+                    newRow < rows &&
+                    newCol >= 0 &&
+                    newCol < cols &&
+                    !visited.has(`${newRow},${newCol}`)
+                ) {
+                    visited.add(`${newRow},${newCol}`);
                     const cell = currentBoard[newRow][newCol];
-
+    
                     if (!cell.clicked && cell.value === 0) {
                         currentBoard[newRow][newCol].clicked = true;
                         queue.push({ row: newRow, col: newCol });
@@ -147,7 +149,7 @@ const Board = () => {
                 }
             }
         }
-
+    
         return currentBoard;
     };
 
@@ -212,7 +214,7 @@ const Board = () => {
         if (gamePaused || !gameStarted) {
             return;
         }
-
+    
         if (
             board[row][col].clicked ||
             board[row][col].flagged ||
@@ -220,34 +222,29 @@ const Board = () => {
         ) {
             return;
         }
-
+    
         let newBoard = board.map((row) => row.map((cell) => ({ ...cell })));
-
+    
         if (newBoard[row][col].value === "mine") {
             console.log("Game Over! - CABUMMM");
-
+    
             newBoard = newBoard.map((row) =>
                 row.map((cell) => ({
                     ...cell,
                     clicked: true,
                 }))
             );
-
-            if (intervalId) {
-                clearInterval(intervalId);
-                setIntervalId(null);
-            }
-
+    
             handleEndGame("CABUMM - GameOver!!!");
             setBoard(newBoard);
         } else {
             newBoard[row][col].clicked = true;
             setScore(score + 1);
-
+    
             if (newBoard[row][col].value === 0) {
                 newBoard = expandCells(row, col, newBoard);
             }
-
+    
             let allSafeCellsRevealed = true;
             for (let i = 0; i < newBoard.length; i++) {
                 for (let j = 0; j < newBoard[i].length; j++) {
@@ -260,12 +257,12 @@ const Board = () => {
                     break;
                 }
             }
-
+    
             if (allSafeCellsRevealed) {
                 console.log("GG EZ - Concluiste o jogo");
                 handleEndGame("GG EZ", true);
             }
-
+    
             setBoard(newBoard);
         }
     };

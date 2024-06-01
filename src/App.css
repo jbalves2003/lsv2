@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  
 }
 
 .App-logo {
@@ -75,6 +76,7 @@
 .game-board {
   display: inline-block;
   margin: 20px 0;
+  background-color: black;
 }
 
 .row {
